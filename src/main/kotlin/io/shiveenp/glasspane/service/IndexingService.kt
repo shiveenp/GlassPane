@@ -6,7 +6,6 @@ import io.shiveenp.glasspane.repository.IndexedFileRepository
 import io.shiveenp.glasspane.repository.model.IndexedDirectory as IndexedDirectoryEntity
 import io.shiveenp.glasspane.repository.model.IndexedFile
 import org.slf4j.LoggerFactory
-import org.springframework.ai.reader.markdown.MarkdownDocumentReader
 import org.springframework.ai.reader.pdf.PagePdfDocumentReader
 import org.springframework.ai.reader.tika.TikaDocumentReader
 import org.springframework.ai.transformer.splitter.TokenTextSplitter
@@ -120,7 +119,6 @@ class IndexingService(
         val resource = FileSystemResource(file)
         val documents = when (file.extension.lowercase()) {
             "pdf" -> PagePdfDocumentReader(resource).read()
-            "md", "markdown" -> MarkdownDocumentReader(file.toURI().toString()).read()
             else -> TikaDocumentReader(resource).read()
         }
 
