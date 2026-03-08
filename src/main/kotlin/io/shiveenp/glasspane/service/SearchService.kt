@@ -98,13 +98,14 @@ class SearchService(
         ServerSentEvent.builder<String>().event(event).data(data).build()
 
     companion object {
-        private const val SIMILARITY_THRESHOLD = 0.5
+        private const val SIMILARITY_THRESHOLD = 0.6
 
         private const val SYSTEM_PROMPT = """
             You are a helpful assistant that answers questions based strictly on the provided context.
             If the context does not contain enough information to answer the question, say so clearly.
             Do not make up information that is not present in the context.
             Keep your answers concise and directly relevant to the question.
+            **Try to answer the question based on the provided context as best as possible.**
         """
     }
 }
