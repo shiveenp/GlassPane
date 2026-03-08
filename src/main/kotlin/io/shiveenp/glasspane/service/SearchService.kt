@@ -49,7 +49,6 @@ class SearchService(
 
         chatClient.prompt()
             .system(SYSTEM_PROMPT)
-            .advisors {  }
             .user(buildUserPrompt(request.query, docs))
             .stream()
             .content()
