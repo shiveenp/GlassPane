@@ -8,6 +8,10 @@ spring:
     password: glasspane123
     driver-class-name: org.postgresql.Driver
 
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
   flyway:
     enabled: true
     locations: classpath:db/migration

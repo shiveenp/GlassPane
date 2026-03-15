@@ -69,3 +69,39 @@ kotlin {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+// ─── Frontend build ────────────────────────────────────────────────────────────
+
+val frontendDir = file("frontend")
+
+tasks.register<Exec>("installFrontendDeps") {
+    group = "frontend"
+    description = "Install frontend npm dependencies"
+    workingDir = frontendDir
+    // Use package-lock.json as the cache key; npm creates node_modules/.package-lock.json
+    inputs.file("$frontendDir/package.json")
+    outputs.file("$frontendDir/node_modules/.package-lock.json")
+    commandLine("npm", "install")
+}
+
+tasks.register<Exec>("buildFrontend") {
+    group = "frontend"
+    description = "Build the React/Vite frontend"
+    dependsOn("installFrontendDeps")
+    workingDir = frontendDir
+    inputs.dir("$frontendDir/src")
+    inputs.file("$frontendDir/index.html")
+    inputs.file("$frontendDir/vite.config.ts")
+    inputs.file("$frontendDir/tailwind.config.js")
+    inputs.file("$frontendDir/package.json")
+    outputs.dir("$frontendDir/dist")
+    commandLine("npm", "run", "build")
+}
+
+// Include the Vite build output in the JAR under BOOT-INF/classes/static/
+tasks.named<ProcessResources>("processResources") {
+    dependsOn("buildFrontend")
+    from("$frontendDir/dist") {
+        into("static")
+    }
+}
